@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import * as bcrypt from 'bcryptjs';
 import { CreateuserDto } from './dtos/createuser.dto';
 import { JwtService } from '@nestjs/jwt';
+import { throwError } from 'rxjs';
 
 @Injectable()
 export class UserService {
@@ -26,12 +27,22 @@ export class UserService {
     });
     return await newUser.save();
   }
-  async loginuser(body: any): Promise<any> {
+  async loginuser(body: any): Promise<string> {
     const checkuserexist = await this.userModel.findOne({ email: body.email });
 
     if (!checkuserexist) {
+         
     }
-    return;
+    //compair password
+    const compairPass = await bcrypt.compare(body.password,checkuserexist.password);
+    
+    if(!compairPass){
+           
+    }
+
+    const token = await this.jwtService.sign({user_id:checkuserexist._id});
+    console.log(token);
+    return token;
   }
   //   async generateToken(user: User): Promise<string> {
   //     const payload = { email: user.email, id: user.id };

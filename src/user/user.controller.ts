@@ -25,6 +25,7 @@ export class UserController {
     @Post("/login")
     async loginUser(@Body() body,@Res() response:Response):Promise<any>{
              const res = await this.userService.loginuser(body);
+             return response.status(201).json({token:res});
              //check user exist or not.....
             //  const checkuserexist = await this.userService.findUserByEmail(body.email);
             //  if(!checkuserexist){
